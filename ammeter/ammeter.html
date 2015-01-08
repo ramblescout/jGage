@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+  <title>jQuery UI Slider - Range with fixed minimum</title>
+   <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+  <script src="jquery-ui.js"></script>
+   
+    <script>
+	var knob;
+	
+	//min = starting grid value, max = ending grid value. start = starting angle, end = ending angle
+	var min = 0;
+	var start = 55;
+	var max = 1000;
+	var end = 300;
+	var ration = (end - start) /max ;
+	//c, s are canvas, ctx, stx are the canvas context
+	var c;
+	var ctx;
+	var s;
+	var stx;
+	// gage_y and x are from the image size
+	var gage_y;
+	var gage_x;
+	var needle_len = 35;
+	var knobImgName   = "rheostat.gif";
+	
+	//needle points straight down, adj is the angle adjustment to point to 0
+	//set up the jQuery UI slider called range-min. it will install it at the div tag "slider-range-min"
+	//note that this slider is set to invisible, so it won't show up but will work as a hotspot
+  $(function() {
+    $( "#slider-range-min" ).slider({
+      range: "min",
+      value: 37,
+      min: 1,
+      max: 1000,
+      slide: function( event, ui ) {
+       // when it detects a change, do the following
+		dialer(ui.value);
+		turndial(ui.value);
+      }
+    });
+   // $( "#amount" ).val(   $( "#slider-range-min" ).slider( "value" ) );
+  });
+
+    $( document ).ready(function() {
+		setup();
+    });
+ 
+    $( window ).load(function() {
+        console.log( "window loaded" );
+    });
+	
+	function setup() {;
+		
+		c=document.getElementById('needleCanvas');
+		ctx=c.getContext('2d');
+		//ctx.clearRect(0,0,5,130);
+		//get clock gif size, 306 x 316
+
+		gage_x = $('#img_gage' ).width();
+		gage_y = $('#img_gage' ).height();
+		needle_len = gage_y/3;
+		//next line sets the needle in the center of the clock
+		ctx.translate(gage_x/2, gage_y/2 );
+		//set needle to starting position
+		rads = start*Math.PI/180;
+		ctx.rotate(rads);
+		ctx.fillRect(0,0,4,needle_len);
+		ctx.save();	
+
+		
+		s = document.getElementById("knobCanvas");
+		knob_x = s.width;
+		knob_y = s.height;
+	
+		
+		if (s.getContext) 
+		{
+			knob  = new Image();
+			knob.onload = iDraw;		
+			knob.src = knobImgName;
+		}
+	}
+
+	function iDraw(e)
+	{
+		stx = s.getContext('2d');
+		stx.drawImage(knob, 0,0);
+		stx.save;
+	}
+	
+	function dialer( deg) {
+		ctx.clearRect(-2,-2,gage_x,gage_y);
+		ctx.restore();
+		ctx.save();
+		deg = (deg * ration) ;
+		ctx.rotate( (Math.PI / 180) * deg);
+		
+		ctx.fillRect(0,0,4,needle_len);
+	}
+	function turndial(deg) {
+		//stx.rotate( (Math.PI / 180) * 45 );
+		stx.restore();
+		stx.save();
+		stx.clearRect(0,0,knob_x,knob_y);
+		stx.translate(knob_x * 0.5, knob_y * 0.5 );
+		stx.rotate( (Math.PI / 180) * deg );
+		stx.translate(-knob_x * 0.5, -knob_y * 0.5);
+		stx.drawImage(knob,0,0);
+		//stx.restore();
+	}
+	
+	
+    </script>
+	
+  <link rel="stylesheet" href="jquery-ui.css">
+
+	<style> 
+
+.nav {
+	position:relative;
+	width:300px;
+    margin-left: 5%;
+	 margin-bottom: 3%;
+    background-color: #b0e0e6;
+}
+
+
+img { 
+	position:absolute;
+	z-index: -1;
+}
+
+
+
+/* workarounds */
+/* reset extra padding in Firefox, see h5bp.com/l */
+input.ui-button::-moz-focus-inner,
+button.ui-button::-moz-focus-inner {
+	border: 0;
+	padding: 0;
+}
+.ui-slider {
+	position: absolute;
+	text-align: left;
+	width:130px;
+	height:130px;
+}
+.ui-slider-handle  {
+	position: absolute;
+	z-index: 4;
+	width: 130px;
+	height: 130px;
+	cursor: default;
+	-ms-touch-action: none;
+	touch-action: none;
+}
+
+.ui-slider .ui-slider-range {
+	position: absolute;
+	z-index: 3;
+	font-size: .7em;
+	display: block;
+	border: 0;
+	background-position: 0 0;
+}
+.ui-widget-header {
+	border: 1px solid #e78f08;
+	font-weight: bold;
+}
+.ui-widget-content {
+
+	
+}
+#slider-range-min { 
+
+	position:absolute;
+	z-index:3;
+	opacity: 0;
+}
+#knobCanvas {
+
+	position:absolute;
+	z-index:2;
+}
+
+#knobstyle {
+	margin-left:500px;
+}
+</style>
+</head>
+<body>
+<div id="img_gage" style="width:423px; height:423px">
+<img src="ammeter.gif" >
+
+<canvas id="needleCanvas" width=430px height=430px > 
+Your browser does not support the HTML5 canvas tag.</canvas>
+
+</div>
+
+<div class="nav">
+<canvas id="knobCanvas" width=130px height=130px > 
+Your browser does not support the HTML5 canvas tag.</canvas>
+
+<div id="slider-range-min"></div>
+
+</div>
+
+</body>
+</html>
+
+</body>
+</html>
+

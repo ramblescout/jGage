@@ -1,0 +1,124 @@
+<html>
+<head>
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script>
+	
+	var deg = 0;
+	var min = 0;
+	var start = 60;
+	var max = 600;
+	var end = 300;
+	var ration = (end - start) /max ;
+	var unit = 10;
+	var c;
+	var ctx;
+	var gage_y;
+	var gage_x;
+	var needle_len = 35;
+	//needle points straight down, adj is the adjustment to point to 0
+
+    $( document ).ready(function() {
+        console.log( "document loaded" );
+		c=document.getElementById('myCanvas');
+		ctx=c.getContext('2d');
+		setup();
+    });
+ 
+    $( window ).load(function() {
+        console.log( "window loaded" );
+    });
+	
+	function setup() {;
+		
+		//ctx.clearRect(0,0,5,130);
+		//get clock gif size, 306 x 316
+		var igage=document.getElementById('img_gage');
+		gage_x = igage.width;
+		gage_y = igage.height;
+		needle_len = gage_y/3;
+		//next line sets the needle in the center of the clock
+		ctx.translate(gage_x/2, gage_y/2 );
+		//set needle to starting position
+		rads = start*Math.PI/180;
+		ctx.rotate(rads);
+		
+		ctx.fillRect(0,0,4,needle_len);
+		ctx.save();	
+	
+		ctx.save();	
+	}
+
+	function runit() {
+		//move in units of 10
+		deg =  unit * ration;
+		ctx.clearRect(-2,-2,gage_x,gage_y);
+		ctx.rotate( (Math.PI / 180) * deg); 
+		ctx.fillRect(0,0,4,needle_len);
+	}
+	
+	function dialer(deg) {
+		ctx.clearRect(-2,-2,gage_x,gage_y);
+		ctx.restore();
+		ctx.save();
+		deg = (deg * ration) ;
+		ctx.rotate( (Math.PI / 180) * deg);
+		
+		ctx.fillRect(0,0,4,needle_len);
+	}
+	
+    </script>
+
+	<style> 
+
+.nav {
+	position:absolute;
+    margin-left: 5%;
+    background-color: #b0e0e6;
+}
+
+
+img { 
+	position:absolute;
+	z-index: -1;
+}
+
+</style>
+</head>
+<body>
+
+<img src="voltmeter.gif" id="img_gage">
+
+<canvas id="myCanvas" width=430px height=430px > 
+Your browser does not support the HTML5 canvas tag.</canvas>
+
+
+<div class="nav">
+<button onclick="runit()"> add 10 </button>  
+<button onclick="dialer(200)"> 200 </button> 
+<button onclick="dialer(350)"> 350 </button>  
+<button onclick="dialer(450)"> 450 </button>  
+<button onclick="dialer(525)"> 525 </button>  
+<button onclick="dialer(600)"> 600 </button>  
+
+
+</div>
+<p>
+  <label for="amount">slider:</label>
+  <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+</p>
+
+
+
+
+<div id="slider-range-min"></div>
+
+ 
+ 
+
+</body>
+</html>
+
+
+</body>
+</html>
+
